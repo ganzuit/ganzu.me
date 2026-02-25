@@ -1,27 +1,22 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Ganpatth Radjaradjane — Developer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #080808;
-      --surface: #0f0f0f;
       --card: #111111;
-      --border: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.07);
       --text: #e8e8e0;
-      --muted: #5a5a52;
+      --muted: #555550;
       --accent: #c8ff00;
-      --accent2: #ff6b35;
       --accent3: #00d4ff;
-      --glow: rgba(200,255,0,0.15);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -29,724 +24,503 @@
       color: var(--text);
       font-family: 'Syne', sans-serif;
       overflow-x: hidden;
-      cursor: none;
+      width: 100%;
     }
 
-    /* CUSTOM CURSOR */
-    #cursor {
-      position: fixed; top: 0; left: 0; z-index: 9999;
-      pointer-events: none; mix-blend-mode: difference;
-    }
-    #cursor-dot {
-      width: 8px; height: 8px; background: var(--accent);
-      border-radius: 50%; position: absolute;
-      transform: translate(-50%, -50%);
-      transition: transform 0.1s;
-    }
-    #cursor-ring {
-      width: 36px; height: 36px;
-      border: 1.5px solid var(--accent);
-      border-radius: 50%; position: absolute;
-      transform: translate(-50%, -50%);
-      transition: all 0.15s ease;
-      opacity: 0.6;
-    }
-    body:has(a:hover) #cursor-ring,
-    body:has(button:hover) #cursor-ring {
-      width: 56px; height: 56px; opacity: 1;
-    }
+    /* ── CURSOR (pointer devices only) ── */
+    #cursor { position:fixed; top:0; left:0; z-index:9999; pointer-events:none; mix-blend-mode:difference; }
+    #cursor-dot { width:8px; height:8px; background:var(--accent); border-radius:50%; position:absolute; transform:translate(-50%,-50%); }
+    #cursor-ring { width:36px; height:36px; border:1.5px solid var(--accent); border-radius:50%; position:absolute; transform:translate(-50%,-50%); transition:all .15s ease; opacity:.6; }
+    @media (hover:hover) { body { cursor:none; } }
+    @media (hover:none)  { #cursor { display:none; } }
 
-    /* NOISE OVERLAY */
+    /* ── CANVAS ── */
+    #canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+    /* ── NOISE ── */
     body::before {
-      content: '';
-      position: fixed; inset: 0; z-index: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none; opacity: 0.4;
+      content:''; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.3;
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
     }
 
-    /* CANVAS BG */
-    #canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    /* ── LAYOUT ── */
+    .wrap { position:relative; z-index:1; width:100%; max-width:1100px; margin:0 auto; padding:0 20px; }
 
-    /* LAYOUT */
-    .wrap { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-
-    /* ─── HERO ─── */
+    /* ── HERO ── */
     #hero {
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 80px 0 60px;
+      min-height: 100svh;
+      display:flex; align-items:center;
+      padding: 100px 0 80px;
       position: relative;
     }
-
-    .hero-inner { width: 100%; }
+    .hero-inner { width:100%; }
 
     .hero-tag {
-      display: inline-flex; align-items: center; gap: 8px;
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--accent); border: 1px solid rgba(200,255,0,0.3);
-      padding: 6px 14px; border-radius: 100px;
-      margin-bottom: 36px;
-      animation: fadeUp 0.8s ease both;
+      display:inline-flex; align-items:center; gap:8px;
+      font-family:'Space Mono',monospace; font-size:10px; letter-spacing:.2em; text-transform:uppercase;
+      color:var(--accent); border:1px solid rgba(200,255,0,.3);
+      padding:6px 14px; border-radius:100px; margin-bottom:28px;
+      animation:fadeUp .8s ease both;
     }
-    .hero-tag .dot {
-      width: 6px; height: 6px; background: var(--accent);
-      border-radius: 50%; animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .hero-tag .dot { width:6px; height:6px; background:var(--accent); border-radius:50%; animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
     h1.name {
-      font-size: clamp(48px, 9vw, 110px);
-      font-weight: 800;
-      line-height: 0.92;
-      letter-spacing: -0.03em;
-      animation: fadeUp 0.9s 0.1s ease both;
-      position: relative;
+      font-size:clamp(40px, 11vw, 110px); font-weight:800;
+      line-height:.92; letter-spacing:-.03em;
+      animation:fadeUp .9s .1s ease both; word-break:break-word;
     }
-    h1.name .first { display: block; }
+    h1.name .first { display:block; }
     h1.name .last {
-      display: block;
-      -webkit-text-stroke: 1px rgba(255,255,255,0.2);
-      color: transparent;
-      position: relative;
+      display:block; -webkit-text-stroke:1px rgba(255,255,255,.2);
+      color:transparent; position:relative;
     }
     h1.name .last::after {
-      content: attr(data-text);
-      position: absolute; left: 0; top: 0;
-      background: linear-gradient(135deg, var(--accent), var(--accent3));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      clip-path: inset(0 100% 0 0);
-      animation: reveal 1.2s 0.6s cubic-bezier(0.77,0,0.18,1) forwards;
+      content:attr(data-text); position:absolute; left:0; top:0;
+      background:linear-gradient(135deg, var(--accent), var(--accent3));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      clip-path:inset(0 100% 0 0);
+      animation:reveal 1.2s .6s cubic-bezier(.77,0,.18,1) forwards;
     }
-    @keyframes reveal { to { clip-path: inset(0 0% 0 0); } }
+    @keyframes reveal { to { clip-path:inset(0 0% 0 0); } }
 
     .hero-sub {
-      margin-top: 28px;
-      font-family: 'Space Mono', monospace;
-      font-size: clamp(13px, 2vw, 16px);
-      color: var(--muted);
-      letter-spacing: 0.05em;
-      animation: fadeUp 1s 0.3s ease both;
+      margin-top:24px; font-family:'Space Mono',monospace;
+      font-size:clamp(11px,2.5vw,15px); color:var(--muted);
+      letter-spacing:.04em; line-height:1.8;
+      animation:fadeUp 1s .3s ease both;
     }
-    .hero-sub span { color: var(--text); }
+    .hero-sub span { color:var(--text); }
 
     .hero-cta {
-      margin-top: 48px;
-      display: flex; flex-wrap: wrap; gap: 14px;
-      animation: fadeUp 1s 0.5s ease both;
+      margin-top:40px; display:flex; flex-wrap:wrap; gap:12px;
+      animation:fadeUp 1s .5s ease both;
     }
     .btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 14px 28px; border-radius: 6px;
-      font-family: 'Space Mono', monospace;
-      font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
-      text-decoration: none; border: none; cursor: none;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      font-weight: 700;
+      display:inline-flex; align-items:center; gap:8px;
+      padding:13px 22px; border-radius:6px;
+      font-family:'Space Mono',monospace; font-size:11px;
+      letter-spacing:.1em; text-transform:uppercase;
+      text-decoration:none; border:none;
+      transition:all .3s cubic-bezier(.34,1.56,.64,1); font-weight:700;
+      white-space:nowrap;
     }
-    .btn-primary {
-      background: var(--accent); color: #080808;
-    }
-    .btn-primary:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 40px rgba(200,255,0,0.35); }
-    .btn-ghost {
-      background: transparent; color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px); }
+    .btn-primary { background:var(--accent); color:#080808; }
+    .btn-primary:hover { transform:translateY(-3px) scale(1.03); box-shadow:0 12px 40px rgba(200,255,0,.3); }
+    .btn-ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+    .btn-ghost:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-3px); }
 
     .scroll-hint {
-      position: absolute; bottom: 32px; left: 0;
-      font-family: 'Space Mono', monospace;
-      font-size: 10px; color: var(--muted); letter-spacing: 0.2em;
-      display: flex; align-items: center; gap: 12px;
-      animation: fadeUp 1s 1s ease both;
+      position:absolute; bottom:28px; left:20px;
+      font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.2em;
+      display:flex; align-items:center; gap:10px;
+      animation:fadeUp 1s 1s ease both;
     }
-    .scroll-hint::after {
-      content: '';
-      width: 48px; height: 1px; background: var(--muted);
-      display: block;
-    }
+    .scroll-hint::after { content:''; width:36px; height:1px; background:var(--muted); display:block; }
 
-    /* ─── SECTION SHARED ─── */
-    section { padding: 100px 0; position: relative; }
+    /* ── SECTIONS ── */
+    section { padding:80px 0; position:relative; }
+    .divider { width:100%; height:1px; background:var(--border); position:absolute; top:0; left:0; }
     .section-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 16px;
+      font-family:'Space Mono',monospace; font-size:10px;
+      letter-spacing:.3em; text-transform:uppercase; color:var(--accent); margin-bottom:14px;
     }
     .section-title {
-      font-size: clamp(28px, 5vw, 52px);
-      font-weight: 800; letter-spacing: -0.02em;
-      margin-bottom: 56px;
-      line-height: 1.1;
+      font-size:clamp(26px,5vw,50px); font-weight:800;
+      letter-spacing:-.02em; margin-bottom:40px; line-height:1.1;
     }
-    .section-title em {
-      font-style: normal;
-      -webkit-text-stroke: 1px rgba(255,255,255,0.18);
-      color: transparent;
-    }
+    .section-title em { font-style:normal; -webkit-text-stroke:1px rgba(255,255,255,.18); color:transparent; }
 
-    .line-divider {
-      width: 100%; height: 1px;
-      background: var(--border);
-      position: absolute; top: 0; left: 0;
+    /* ── STATS ── */
+    #about { padding-top:0; }
+    .stats-grid {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:2px;
     }
-
-    /* ─── ABOUT / STATS ─── */
-    #about .stats-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 2px; margin-top: 0;
-    }
+    @media (max-width:560px) { .stats-grid { grid-template-columns:repeat(2,1fr); } }
     .stat-box {
-      background: var(--card);
-      padding: 32px 28px;
-      border: 1px solid var(--border);
-      position: relative; overflow: hidden;
-      transition: border-color 0.3s;
+      background:var(--card); padding:26px 22px;
+      border:1px solid var(--border); overflow:hidden;
+      transition:border-color .3s;
     }
-    .stat-box:hover { border-color: rgba(200,255,0,0.3); }
-    .stat-box::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(200,255,0,0.04) 0%, transparent 60%);
-      opacity: 0; transition: opacity 0.3s;
-    }
-    .stat-box:hover::before { opacity: 1; }
+    .stat-box:hover { border-color:rgba(200,255,0,.3); }
     .stat-num {
-      font-size: 44px; font-weight: 800;
-      letter-spacing: -0.03em; line-height: 1;
-      background: linear-gradient(135deg, var(--accent), #8fff00);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-size:clamp(30px,6vw,44px); font-weight:800; letter-spacing:-.03em; line-height:1;
+      background:linear-gradient(135deg, var(--accent), #8fff00);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     }
-    .stat-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; color: var(--muted);
-      letter-spacing: 0.1em; margin-top: 8px;
-      text-transform: uppercase;
-    }
+    .stat-label { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:.1em; margin-top:8px; text-transform:uppercase; }
 
-    /* ─── EDUCATION ─── */
-    #education .edu-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 40px 44px;
-      display: flex; flex-wrap: wrap;
-      align-items: flex-start; justify-content: space-between;
-      gap: 24px;
-      position: relative; overflow: hidden;
-      transition: border-color 0.3s, transform 0.3s;
+    /* ── EDUCATION ── */
+    .edu-card {
+      background:var(--card); border:1px solid var(--border); border-radius:4px;
+      padding:32px 28px; display:flex; flex-wrap:wrap;
+      align-items:flex-start; justify-content:space-between; gap:18px;
+      position:relative; overflow:hidden; transition:border-color .3s, transform .3s;
     }
-    #education .edu-card:hover { border-color: rgba(0,212,255,0.4); transform: translateY(-4px); }
-    #education .edu-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0;
-      width: 4px; height: 100%;
-      background: linear-gradient(180deg, var(--accent3), transparent);
+    .edu-card:hover { border-color:rgba(0,212,255,.4); transform:translateY(-3px); }
+    .edu-card::before {
+      content:''; position:absolute; top:0; left:0;
+      width:4px; height:100%; background:linear-gradient(180deg, var(--accent3), transparent);
     }
-    .edu-uni {
-      font-size: 22px; font-weight: 700; letter-spacing: -0.01em;
-    }
-    .edu-degree {
-      font-family: 'Space Mono', monospace;
-      font-size: 12px; color: var(--accent3);
-      letter-spacing: 0.08em; margin-top: 8px;
-    }
-    .edu-desc { font-size: 14px; color: var(--muted); margin-top: 10px; max-width: 480px; line-height: 1.6; }
+    .edu-uni { font-size:clamp(17px,3vw,22px); font-weight:700; }
+    .edu-degree { font-family:'Space Mono',monospace; font-size:11px; color:var(--accent3); letter-spacing:.08em; margin-top:8px; }
+    .edu-desc { font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7; }
     .edu-years {
-      font-family: 'Space Mono', monospace;
-      font-size: 13px; color: var(--muted);
-      white-space: nowrap;
-      background: rgba(255,255,255,0.04);
-      padding: 8px 16px; border-radius: 4px;
-      border: 1px solid var(--border);
+      font-family:'Space Mono',monospace; font-size:12px; color:var(--muted);
+      white-space:nowrap; background:rgba(255,255,255,.04);
+      padding:8px 14px; border-radius:4px; border:1px solid var(--border); align-self:flex-start;
     }
 
-    /* ─── EXPERIENCE ─── */
-    #experience .exp-list { display: flex; flex-direction: column; gap: 2px; }
-    .exp-item {
-      background: var(--card);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      transition: border-color 0.3s;
-    }
-    .exp-item:hover { border-color: rgba(200,255,0,0.25); }
+    /* ── EXPERIENCE ── */
+    .exp-list { display:flex; flex-direction:column; gap:2px; }
+    .exp-item { background:var(--card); border:1px solid var(--border); overflow:hidden; transition:border-color .3s; }
+    .exp-item:hover { border-color:rgba(200,255,0,.2); }
+
     .exp-header {
-      display: flex; flex-wrap: wrap;
-      align-items: center; justify-content: space-between;
-      gap: 12px; padding: 26px 32px;
-      cursor: none;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:8px; padding:20px 22px; cursor:pointer;
+      -webkit-tap-highlight-color:transparent; user-select:none;
     }
-    .exp-left { display: flex; align-items: center; gap: 20px; }
-    .exp-num {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; color: var(--muted); width: 24px;
-    }
-    .exp-co { font-size: 18px; font-weight: 700; }
-    .exp-role {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; color: var(--accent);
-      letter-spacing: 0.08em; margin-top: 4px;
-    }
-    .exp-right { display: flex; align-items: center; gap: 16px; }
-    .exp-date {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; color: var(--muted);
-    }
+    .exp-left { display:flex; align-items:center; gap:14px; min-width:0; flex:1; }
+    .exp-num { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); flex-shrink:0; }
+    .exp-info { min-width:0; flex:1; }
+    .exp-co { font-size:clamp(13px,3vw,17px); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .exp-role { font-family:'Space Mono',monospace; font-size:10px; color:var(--accent); letter-spacing:.07em; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    .exp-right { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+    .exp-date { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); white-space:nowrap; }
     .exp-tag {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px; padding: 4px 12px; border-radius: 100px;
-      letter-spacing: 0.1em; text-transform: uppercase;
+      font-family:'Space Mono',monospace; font-size:9px;
+      padding:3px 9px; border-radius:100px; letter-spacing:.1em; text-transform:uppercase; white-space:nowrap;
     }
-    .tag-current { background: rgba(200,255,0,0.12); color: var(--accent); border: 1px solid rgba(200,255,0,0.2); }
-    .tag-past { background: rgba(255,255,255,0.04); color: var(--muted); border: 1px solid var(--border); }
-    .exp-toggle { color: var(--muted); font-size: 18px; transition: transform 0.3s; }
-    .exp-item.open .exp-toggle { transform: rotate(45deg); color: var(--accent); }
-    .exp-body {
-      max-height: 0; overflow: hidden;
-      transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
-      border-top: 1px solid transparent;
-    }
-    .exp-item.open .exp-body {
-      max-height: 300px;
-      border-top-color: var(--border);
-    }
-    .exp-body-inner {
-      padding: 24px 32px 28px 76px;
-      font-size: 14px; color: var(--muted); line-height: 1.7;
+    .tag-current { background:rgba(200,255,0,.12); color:var(--accent); border:1px solid rgba(200,255,0,.2); }
+    .tag-past { background:rgba(255,255,255,.03); color:var(--muted); border:1px solid var(--border); }
+    .exp-toggle { color:var(--muted); font-size:20px; transition:transform .3s, color .3s; flex-shrink:0; line-height:1; width:20px; text-align:center; }
+    .exp-item.open .exp-toggle { transform:rotate(45deg); color:var(--accent); }
+
+    .exp-body { max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.4,0,.2,1); border-top:1px solid transparent; }
+    .exp-item.open .exp-body { max-height:400px; border-top-color:var(--border); }
+    .exp-body-inner { padding:18px 22px 22px; font-size:13px; color:var(--muted); line-height:1.75; }
+
+    @media (max-width:440px) {
+      .exp-num { display:none; }
+      .exp-date { display:none; }
+      .exp-header { padding:16px; }
+      .exp-body-inner { padding:14px 16px 18px; }
     }
 
-    /* ─── CONTACT ─── */
-    #contact { overflow: hidden; }
+    /* ── CONTACT ── */
     .contact-wrap {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 4px; padding: 60px 56px;
-      position: relative; overflow: hidden;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:4px; padding:44px 36px; position:relative; overflow:hidden;
     }
     .contact-wrap::before {
-      content: '';
-      position: absolute; top: -80px; right: -80px;
-      width: 320px; height: 320px;
-      background: radial-gradient(circle, rgba(200,255,0,0.08) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .contact-wrap::after {
-      content: '';
-      position: absolute; bottom: -60px; left: 30%;
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
-      pointer-events: none;
+      content:''; position:absolute; top:-80px; right:-80px;
+      width:260px; height:260px;
+      background:radial-gradient(circle, rgba(200,255,0,.07) 0%, transparent 70%); pointer-events:none;
     }
     .contact-title {
-      font-size: clamp(32px, 6vw, 68px);
-      font-weight: 800; letter-spacing: -0.03em;
-      line-height: 0.95; margin-bottom: 40px;
+      font-size:clamp(28px,7vw,64px); font-weight:800;
+      letter-spacing:-.03em; line-height:.95; margin-bottom:32px;
     }
     .contact-title .highlight {
-      background: linear-gradient(135deg, var(--accent), var(--accent3));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background:linear-gradient(135deg, var(--accent), var(--accent3));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     }
-    .contact-links { display: flex; flex-wrap: wrap; gap: 12px; }
+    .contact-links { display:flex; flex-wrap:wrap; gap:10px; }
     .contact-link {
-      display: inline-flex; align-items: center; gap: 10px;
-      padding: 14px 22px;
-      border: 1px solid var(--border);
-      border-radius: 6px; text-decoration: none;
-      font-family: 'Space Mono', monospace;
-      font-size: 13px; color: var(--text);
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      background: rgba(255,255,255,0.02);
+      display:inline-flex; align-items:center; gap:9px;
+      padding:12px 16px; border:1px solid var(--border); border-radius:6px;
+      text-decoration:none; font-family:'Space Mono',monospace; font-size:11px;
+      color:var(--text); transition:all .3s cubic-bezier(.34,1.56,.64,1);
+      background:rgba(255,255,255,.02);
     }
-    .contact-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-4px); box-shadow: 0 8px 30px rgba(200,255,0,0.15); }
-    .contact-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .contact-link:hover { border-color:var(--accent); color:var(--accent); transform:translateY(-3px); box-shadow:0 8px 28px rgba(200,255,0,.12); }
+    .contact-link svg { width:14px; height:14px; flex-shrink:0; }
 
-    /* ─── FOOTER ─── */
-    footer {
-      padding: 32px 0;
-      border-top: 1px solid var(--border);
-      display: flex; flex-wrap: wrap;
-      justify-content: space-between; align-items: center;
-      gap: 12px; position: relative; z-index: 1;
-    }
-    footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; width: 100%; }
-    .footer-text {
-      font-family: 'Space Mono', monospace;
-      font-size: 11px; color: var(--muted); letter-spacing: 0.1em;
-    }
-    .footer-text span { color: var(--accent); }
+    @media (max-width:480px) { .contact-wrap { padding:28px 20px; } }
 
-    /* SCROLL ANIMATIONS */
-    .reveal {
-      opacity: 0; transform: translateY(40px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
+    /* ── FOOTER ── */
+    footer { padding:26px 0; border-top:1px solid var(--border); position:relative; z-index:1; }
+    footer .wrap { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; }
+    .footer-text { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.1em; }
+    .footer-text span { color:var(--accent); }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    /* ── REVEAL ── */
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
 
-    /* MOBILE */
-    @media (max-width: 640px) {
-      body { cursor: auto; }
-      #cursor { display: none; }
-      .wrap { padding: 0 18px; }
-      section { padding: 72px 0; }
-      #education .edu-card { padding: 28px 24px; }
-      .exp-body-inner { padding: 20px 20px 24px; }
-      .contact-wrap { padding: 36px 28px; }
-      .exp-header { padding: 22px 20px; }
-      .exp-left { gap: 12px; }
-      .exp-num { display: none; }
-    }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
   </style>
 </head>
 <body>
 
-  <!-- Custom Cursor -->
-  <div id="cursor">
-    <div id="cursor-ring"></div>
-    <div id="cursor-dot"></div>
+<div id="cursor"><div id="cursor-ring"></div><div id="cursor-dot"></div></div>
+<canvas id="canvas"></canvas>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div class="hero-tag"><span class="dot"></span>Open to opportunities</div>
+      <h1 class="name">
+        <span class="first">Ganpatth</span>
+        <span class="last" data-text="Radjaradjane">Radjaradjane</span>
+      </h1>
+      <p class="hero-sub">
+        <span>Developer</span> — building digital things that matter.<br/>
+        Based in Melbourne, Australia.
+      </p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">Get in touch ↓</a>
+        <a href="#experience" class="btn btn-ghost">View experience</a>
+      </div>
+    </div>
+    <div class="scroll-hint">scroll</div>
   </div>
+</section>
 
-  <!-- Particle Canvas -->
-  <canvas id="canvas"></canvas>
-
-  <!-- ─── HERO ─── -->
-  <section id="hero">
-    <div class="wrap">
-      <div class="hero-inner">
-        <div class="hero-tag">
-          <span class="dot"></span>
-          Available for opportunities
-        </div>
-        <h1 class="name">
-          <span class="first">Ganpatth</span>
-          <span class="last" data-text="Radjaradjane">Radjaradjane</span>
-        </h1>
-        <p class="hero-sub">
-          <span>Developer</span> — building digital things that matter.<br/>
-          Based in Melbourne, Australia.
-        </p>
-        <div class="hero-cta">
-          <a href="#contact" class="btn btn-primary">Get in touch ↓</a>
-          <a href="#experience" class="btn btn-ghost">View experience</a>
-        </div>
-      </div>
-      <div class="scroll-hint">scroll</div>
+<!-- STATS -->
+<section id="about" style="padding-top:0">
+  <div class="wrap">
+    <div class="stats-grid reveal">
+      <div class="stat-box"><div class="stat-num">7+</div><div class="stat-label">Companies</div></div>
+      <div class="stat-box"><div class="stat-num">3rd</div><div class="stat-label">Year @ Monash</div></div>
+      <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Lines of code</div></div>
+      <div class="stat-box"><div class="stat-num">AU</div><div class="stat-label">Melbourne</div></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── STATS ─── -->
-  <section id="about" style="padding-top:0">
-    <div class="wrap">
-      <div class="stats-grid reveal">
-        <div class="stat-box">
-          <div class="stat-num">7+</div>
-          <div class="stat-label">Companies worked</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num">3rd</div>
-          <div class="stat-label">Year @ Monash</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num">∞</div>
-          <div class="stat-label">Lines of code</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-num">AU</div>
-          <div class="stat-label">Melbourne based</div>
-        </div>
+<!-- EDUCATION -->
+<section id="education">
+  <div class="divider"></div>
+  <div class="wrap">
+    <p class="section-label reveal">Education</p>
+    <h2 class="section-title reveal">Where I <em>studied</em></h2>
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-uni">Monash University</div>
+        <div class="edu-degree">Bachelor of Computer Science</div>
+        <div class="edu-desc">Studying software engineering, algorithms, systems design, and modern development practices at one of Australia's leading research universities.</div>
       </div>
+      <div class="edu-years">2023 — 2026</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── EDUCATION ─── -->
-  <section id="education">
-    <div class="line-divider"></div>
-    <div class="wrap">
-      <p class="section-label reveal">Education</p>
-      <h2 class="section-title reveal">Where I <em>studied</em></h2>
-      <div class="edu-card reveal">
-        <div>
-          <div class="edu-uni">Monash University</div>
-          <div class="edu-degree">Bachelor of Computer Science</div>
-          <div class="edu-desc">Studying software engineering fundamentals, algorithms, systems design, and modern development practices at one of Australia's leading research universities.</div>
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="divider"></div>
+  <div class="wrap">
+    <p class="section-label reveal">Experience</p>
+    <h2 class="section-title reveal">Where I've <em>worked</em></h2>
+    <div class="exp-list reveal">
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div class="exp-left">
+            <span class="exp-num">01</span>
+            <div class="exp-info"><div class="exp-co">Company One</div><div class="exp-role">Role Title</div></div>
+          </div>
+          <div class="exp-right">
+            <span class="exp-date">20XX – Present</span>
+            <span class="exp-tag tag-current">Current</span>
+            <span class="exp-toggle">+</span>
+          </div>
         </div>
-        <div class="edu-years">2023 — 2026</div>
+        <div class="exp-body"><div class="exp-body-inner">Add your description here — what you built, what you achieved, and the technologies you used.</div></div>
       </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div class="exp-left">
+            <span class="exp-num">02</span>
+            <div class="exp-info"><div class="exp-co">Company Two</div><div class="exp-role">Role Title</div></div>
+          </div>
+          <div class="exp-right">
+            <span class="exp-date">20XX – 20XX</span>
+            <span class="exp-tag tag-past">Past</span>
+            <span class="exp-toggle">+</span>
+          </div>
+        </div>
+        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div class="exp-left">
+            <span class="exp-num">03</span>
+            <div class="exp-info"><div class="exp-co">Company Three</div><div class="exp-role">Role Title</div></div>
+          </div>
+          <div class="exp-right">
+            <span class="exp-date">20XX – 20XX</span>
+            <span class="exp-tag tag-past">Past</span>
+            <span class="exp-toggle">+</span>
+          </div>
+        </div>
+        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div class="exp-left">
+            <span class="exp-num">04</span>
+            <div class="exp-info"><div class="exp-co">Company Four</div><div class="exp-role">Role Title</div></div>
+          </div>
+          <div class="exp-right">
+            <span class="exp-date">20XX – 20XX</span>
+            <span class="exp-tag tag-past">Past</span>
+            <span class="exp-toggle">+</span>
+          </div>
+        </div>
+        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div class="exp-left">
+            <span class="exp-num">05</span>
+            <div class="exp-info"><div class="exp-co">Company Five</div><div class="exp-role">Role Title</div></div>
+          </div>
+          <div class="exp-right">
+            <span class="exp-date">20XX – 20XX</span>
+            <span class="exp-tag tag-past">Past</span>
+            <span class="exp-toggle">+</span>
+          </div>
+        </div>
+        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div class="exp-left">
+            <span class="exp-num">06</span>
+            <div class="exp-info"><div class="exp-co">Company Six</div><div class="exp-role">Role Title</div></div>
+          </div>
+          <div class="exp-right">
+            <span class="exp-date">20XX – 20XX</span>
+            <span class="exp-tag tag-past">Past</span>
+            <span class="exp-toggle">+</span>
+          </div>
+        </div>
+        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <div class="exp-left">
+            <span class="exp-num">07</span>
+            <div class="exp-info"><div class="exp-co">Company Seven</div><div class="exp-role">Role Title</div></div>
+          </div>
+          <div class="exp-right">
+            <span class="exp-date">20XX – 20XX</span>
+            <span class="exp-tag tag-past">Past</span>
+            <span class="exp-toggle">+</span>
+          </div>
+        </div>
+        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+      </div>
+
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── EXPERIENCE ─── -->
-  <section id="experience">
-    <div class="line-divider"></div>
-    <div class="wrap">
-      <p class="section-label reveal">Experience</p>
-      <h2 class="section-title reveal">Where I've <em>worked</em></h2>
-      <div class="exp-list reveal">
-
-        <div class="exp-item">
-          <div class="exp-header" onclick="toggleExp(this)">
-            <div class="exp-left">
-              <span class="exp-num">01</span>
-              <div>
-                <div class="exp-co">Company One</div>
-                <div class="exp-role">Role Title</div>
-              </div>
-            </div>
-            <div class="exp-right">
-              <span class="exp-date">20XX — Present</span>
-              <span class="exp-tag tag-current">Current</span>
-              <span class="exp-toggle">+</span>
-            </div>
-          </div>
-          <div class="exp-body">
-            <div class="exp-body-inner">Add your description here — what you built, what you achieved, and the technologies you used.</div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-header" onclick="toggleExp(this)">
-            <div class="exp-left">
-              <span class="exp-num">02</span>
-              <div>
-                <div class="exp-co">Company Two</div>
-                <div class="exp-role">Role Title</div>
-              </div>
-            </div>
-            <div class="exp-right">
-              <span class="exp-date">20XX — 20XX</span>
-              <span class="exp-tag tag-past">Past</span>
-              <span class="exp-toggle">+</span>
-            </div>
-          </div>
-          <div class="exp-body">
-            <div class="exp-body-inner">Add your description here — what you built, what you achieved, and the technologies you used.</div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-header" onclick="toggleExp(this)">
-            <div class="exp-left">
-              <span class="exp-num">03</span>
-              <div>
-                <div class="exp-co">Company Three</div>
-                <div class="exp-role">Role Title</div>
-              </div>
-            </div>
-            <div class="exp-right">
-              <span class="exp-date">20XX — 20XX</span>
-              <span class="exp-tag tag-past">Past</span>
-              <span class="exp-toggle">+</span>
-            </div>
-          </div>
-          <div class="exp-body">
-            <div class="exp-body-inner">Add your description here.</div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-header" onclick="toggleExp(this)">
-            <div class="exp-left">
-              <span class="exp-num">04</span>
-              <div>
-                <div class="exp-co">Company Four</div>
-                <div class="exp-role">Role Title</div>
-              </div>
-            </div>
-            <div class="exp-right">
-              <span class="exp-date">20XX — 20XX</span>
-              <span class="exp-tag tag-past">Past</span>
-              <span class="exp-toggle">+</span>
-            </div>
-          </div>
-          <div class="exp-body">
-            <div class="exp-body-inner">Add your description here.</div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-header" onclick="toggleExp(this)">
-            <div class="exp-left">
-              <span class="exp-num">05</span>
-              <div>
-                <div class="exp-co">Company Five</div>
-                <div class="exp-role">Role Title</div>
-              </div>
-            </div>
-            <div class="exp-right">
-              <span class="exp-date">20XX — 20XX</span>
-              <span class="exp-tag tag-past">Past</span>
-              <span class="exp-toggle">+</span>
-            </div>
-          </div>
-          <div class="exp-body">
-            <div class="exp-body-inner">Add your description here.</div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-header" onclick="toggleExp(this)">
-            <div class="exp-left">
-              <span class="exp-num">06</span>
-              <div>
-                <div class="exp-co">Company Six</div>
-                <div class="exp-role">Role Title</div>
-              </div>
-            </div>
-            <div class="exp-right">
-              <span class="exp-date">20XX — 20XX</span>
-              <span class="exp-tag tag-past">Past</span>
-              <span class="exp-toggle">+</span>
-            </div>
-          </div>
-          <div class="exp-body">
-            <div class="exp-body-inner">Add your description here.</div>
-          </div>
-        </div>
-
-        <div class="exp-item">
-          <div class="exp-header" onclick="toggleExp(this)">
-            <div class="exp-left">
-              <span class="exp-num">07</span>
-              <div>
-                <div class="exp-co">Company Seven</div>
-                <div class="exp-role">Role Title</div>
-              </div>
-            </div>
-            <div class="exp-right">
-              <span class="exp-date">20XX — 20XX</span>
-              <span class="exp-tag tag-past">Past</span>
-              <span class="exp-toggle">+</span>
-            </div>
-          </div>
-          <div class="exp-body">
-            <div class="exp-body-inner">Add your description here.</div>
-          </div>
-        </div>
-
+<!-- CONTACT -->
+<section id="contact">
+  <div class="divider"></div>
+  <div class="wrap">
+    <div class="contact-wrap reveal">
+      <div class="contact-title">Let's<br/><span class="highlight">work together.</span></div>
+      <div class="contact-links">
+        <a href="mailto:itsme@ganzu.me" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          itsme@ganzu.me
+        </a>
+        <a href="https://linkedin.com/in/ganpatth" target="_blank" rel="noopener" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+        <a href="#" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub
+        </a>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ─── CONTACT ─── -->
-  <section id="contact">
-    <div class="line-divider"></div>
-    <div class="wrap">
-      <div class="contact-wrap reveal">
-        <div class="contact-title">
-          Let's<br/><span class="highlight">work together.</span>
-        </div>
-        <div class="contact-links">
-          <a href="mailto:itsme@ganzu.me" class="contact-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-            </svg>
-            itsme@ganzu.me
-          </a>
-          <a href="https://linkedin.com/in/YOURUSERNAME" target="_blank" rel="noopener" class="contact-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>
-            </svg>
-            LinkedIn
-          </a>
-          <a href="#" class="contact-link">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-            </svg>
-            GitHub
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+<footer>
+  <div class="wrap">
+    <span class="footer-text">© 2025 <span>Ganpatth Radjaradjane</span></span>
+    <span class="footer-text">Melbourne, <span>Australia</span></span>
+  </div>
+</footer>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="wrap">
-      <span class="footer-text">© 2025 <span>Ganpatth Radjaradjane</span></span>
-      <span class="footer-text">Melbourne, <span>Australia</span></span>
-    </div>
-  </footer>
-
-  <script>
-    // ── Cursor ──
+<script>
+  // ── Cursor ──
+  if (window.matchMedia('(hover:hover)').matches) {
     const dot = document.getElementById('cursor-dot');
     const ring = document.getElementById('cursor-ring');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-    function animCursor() {
-      dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-      rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
-      ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-      requestAnimationFrame(animCursor);
-    }
-    animCursor();
+    let mx=0, my=0, rx=0, ry=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+    (function tick() {
+      dot.style.left=mx+'px'; dot.style.top=my+'px';
+      rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
+      ring.style.left=rx+'px'; ring.style.top=ry+'px';
+      requestAnimationFrame(tick);
+    })();
+  }
 
-    // ── Particles ──
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let W, H, particles = [];
+  // ── Particles ──
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
 
-    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-    resize(); window.addEventListener('resize', resize);
+  const COUNT = window.innerWidth < 600 ? 55 : 110;
+  const pts = Array.from({length:COUNT}, () => ({
+    x: Math.random()*window.innerWidth,
+    y: Math.random()*window.innerHeight,
+    vx:(Math.random()-.5)*.22, vy:(Math.random()-.5)*.22,
+    r: Math.random()*1.1+.15,
+    a: Math.random()*.3+.05,
+    c: Math.random()>.72?'#c8ff00':Math.random()>.5?'#00d4ff':'#ffffff'
+  }));
 
-    class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * W;
-        this.y = Math.random() * H;
-        this.size = Math.random() * 1.2 + 0.2;
-        this.speedX = (Math.random() - 0.5) * 0.3;
-        this.speedY = (Math.random() - 0.5) * 0.3;
-        this.opacity = Math.random() * 0.4 + 0.05;
-        this.color = Math.random() > 0.7 ? '#c8ff00' : Math.random() > 0.5 ? '#00d4ff' : '#ffffff';
+  (function loop() {
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p => {
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<-8||p.x>W+8||p.y<-8||p.y>H+8){
+        p.x=Math.random()*W; p.y=Math.random()*H;
       }
-      update() {
-        this.x += this.speedX; this.y += this.speedY;
-        if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=p.c; ctx.globalAlpha=p.a; ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    requestAnimationFrame(loop);
+  })();
+
+  // ── Scroll reveal ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => {
+      if(e.isIntersecting){
+        setTimeout(()=>e.target.classList.add('visible'),i*50);
+        obs.unobserve(e.target);
       }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.globalAlpha = this.opacity;
-        ctx.fill();
-      }
-    }
+    });
+  },{threshold:.07});
+  document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
 
-    for (let i = 0; i < 120; i++) particles.push(new Particle());
-
-    function loop() {
-      ctx.clearRect(0, 0, W, H);
-      particles.forEach(p => { p.update(); p.draw(); });
-      ctx.globalAlpha = 1;
-      requestAnimationFrame(loop);
-    }
-    loop();
-
-    // ── Reveal on scroll ──
-    const reveals = document.querySelectorAll('.reveal');
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => e.target.classList.add('visible'), i * 60);
-          obs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    reveals.forEach(r => obs.observe(r));
-
-    // ── Exp accordion ──
-    function toggleExp(header) {
-      const item = header.closest('.exp-item');
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.exp-item.open').forEach(i => i.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
-    }
-  </script>
+  // ── Accordion ──
+  function toggleExp(header) {
+    const item = header.closest('.exp-item');
+    const was = item.classList.contains('open');
+    document.querySelectorAll('.exp-item.open').forEach(i=>i.classList.remove('open'));
+    if(!was) item.classList.add('open');
+  }
+</script>
 </body>
 </html>

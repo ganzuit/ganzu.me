@@ -39,7 +39,6 @@ It is designed to be **simple, fast, and accessible**, with a focus on clearly p
 
 * HTML5
 * CSS3
-* (Optional: add JavaScript if you used any)
 
 ---
 
@@ -47,10 +46,10 @@ It is designed to be **simple, fast, and accessible**, with a focus on clearly p
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ganzu-portfolio.git
+git clone https://github.com/ganzuit/ganzu.me.git
 
 # Open the project
-cd ganzu-portfolio
+cd ganzu.me
 
 # Run locally
 # Simply open index.html in your browser
@@ -82,7 +81,7 @@ It also acts as a **single point of access** for recruiters and collaborators to
 * Add animations and micro-interactions
 * Improve responsiveness across devices
 * Enhance project showcase with visuals
-* Integrate a blog or technical write-ups
+
 
 ---
 

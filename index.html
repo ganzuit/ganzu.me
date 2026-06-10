@@ -27,7 +27,7 @@
       width: 100%;
     }
 
-    /* ── CURSOR (pointer devices only) ── */
+    /* ── CURSOR ── */
     #cursor { position:fixed; top:0; left:0; z-index:9999; pointer-events:none; mix-blend-mode:difference; }
     #cursor-dot { width:8px; height:8px; background:var(--accent); border-radius:50%; position:absolute; transform:translate(-50%,-50%); }
     #cursor-ring { width:36px; height:36px; border:1.5px solid var(--accent); border-radius:50%; position:absolute; transform:translate(-50%,-50%); transition:all .15s ease; opacity:.6; }
@@ -46,11 +46,37 @@
     /* ── LAYOUT ── */
     .wrap { position:relative; z-index:1; width:100%; max-width:1100px; margin:0 auto; padding:0 20px; }
 
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 20px;
+      background: rgba(8,8,8,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      height: 56px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700;
+      color: var(--accent); letter-spacing: .1em; text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-link {
+      font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: .18em;
+      text-transform: uppercase; color: var(--muted); text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-link:hover { color: var(--text); }
+    @media (max-width: 500px) { .nav-links { display: none; } }
+
     /* ── HERO ── */
     #hero {
       min-height: 100svh;
       display:flex; align-items:center;
-      padding: 100px 0 80px;
+      padding: 120px 0 80px;
       position: relative;
     }
     .hero-inner { width:100%; }
@@ -66,13 +92,14 @@
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
     h1.name {
-      font-size:clamp(40px, 11vw, 110px); font-weight:800;
+      font-size:clamp(28px, 8.5vw, 110px); font-weight:800;
       line-height:.92; letter-spacing:-.03em;
-      animation:fadeUp .9s .1s ease both; word-break:break-word;
+      animation:fadeUp .9s .1s ease both;
     }
     h1.name .first { display:block; }
     h1.name .last {
-      display:block; -webkit-text-stroke:1px rgba(255,255,255,.2);
+      display:block; white-space:nowrap;
+      -webkit-text-stroke:1px rgba(255,255,255,.2);
       color:transparent; position:relative;
     }
     h1.name .last::after {
@@ -86,8 +113,8 @@
 
     .hero-sub {
       margin-top:24px; font-family:'Space Mono',monospace;
-      font-size:clamp(11px,2.5vw,15px); color:var(--muted);
-      letter-spacing:.04em; line-height:1.8;
+      font-size:clamp(11px,2.5vw,14px); color:var(--muted);
+      letter-spacing:.04em; line-height:2;
       animation:fadeUp 1s .3s ease both;
     }
     .hero-sub span { color:var(--text); }
@@ -150,26 +177,29 @@
     }
     .stat-label { font-family:'Space Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:.1em; margin-top:8px; text-transform:uppercase; }
 
-    /* ── EDUCATION ── */
-    .edu-card {
-      background:var(--card); border:1px solid var(--border); border-radius:4px;
-      padding:32px 28px; display:flex; flex-wrap:wrap;
-      align-items:flex-start; justify-content:space-between; gap:18px;
-      position:relative; overflow:hidden; transition:border-color .3s, transform .3s;
+    /* ── SKILLS ── */
+    .skills-grid { display: flex; flex-direction: column; gap: 16px; }
+    .skill-row {
+      display: flex; gap: 16px; align-items: flex-start;
+      padding: 18px 20px; background: var(--card); border: 1px solid var(--border);
+      transition: border-color .3s;
     }
-    .edu-card:hover { border-color:rgba(0,212,255,.4); transform:translateY(-3px); }
-    .edu-card::before {
-      content:''; position:absolute; top:0; left:0;
-      width:4px; height:100%; background:linear-gradient(180deg, var(--accent3), transparent);
+    .skill-row:hover { border-color: rgba(200,255,0,.15); }
+    .skill-cat {
+      font-family: 'Space Mono', monospace; font-size: 9px; color: var(--accent);
+      letter-spacing: .15em; text-transform: uppercase; min-width: 120px;
+      padding-top: 5px; flex-shrink: 0;
     }
-    .edu-uni { font-size:clamp(17px,3vw,22px); font-weight:700; }
-    .edu-degree { font-family:'Space Mono',monospace; font-size:11px; color:var(--accent3); letter-spacing:.08em; margin-top:8px; }
-    .edu-desc { font-size:13px; color:var(--muted); margin-top:10px; line-height:1.7; }
-    .edu-years {
-      font-family:'Space Mono',monospace; font-size:12px; color:var(--muted);
-      white-space:nowrap; background:rgba(255,255,255,.04);
-      padding:8px 14px; border-radius:4px; border:1px solid var(--border); align-self:flex-start;
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .skill-tag {
+      font-family: 'Space Mono', monospace; font-size: 10px;
+      padding: 4px 11px; border-radius: 4px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border);
+      color: var(--text); letter-spacing: .03em;
+      transition: border-color .2s, color .2s;
     }
+    .skill-tag:hover { border-color: rgba(200,255,0,.4); color: var(--accent); }
+    @media (max-width: 600px) { .skill-cat { min-width: 100%; } .skill-row { flex-direction: column; gap: 10px; } }
 
     /* ── EXPERIENCE ── */
     .exp-list { display:flex; flex-direction:column; gap:2px; }
@@ -198,15 +228,69 @@
     .exp-toggle { color:var(--muted); font-size:20px; transition:transform .3s, color .3s; flex-shrink:0; line-height:1; width:20px; text-align:center; }
     .exp-item.open .exp-toggle { transform:rotate(45deg); color:var(--accent); }
 
-    .exp-body { max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.4,0,.2,1); border-top:1px solid transparent; }
-    .exp-item.open .exp-body { max-height:400px; border-top-color:var(--border); }
-    .exp-body-inner { padding:18px 22px 22px; font-size:13px; color:var(--muted); line-height:1.75; }
+    .exp-body { max-height:0; overflow:hidden; transition:max-height .45s cubic-bezier(.4,0,.2,1); border-top:1px solid transparent; }
+    .exp-item.open .exp-body { max-height:700px; border-top-color:var(--border); }
+    .exp-body-inner { padding:20px 22px 24px; font-size:13px; color:var(--muted); line-height:1.85; }
+    .exp-body-inner ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+    .exp-body-inner ul li { padding-left: 20px; position: relative; }
+    .exp-body-inner ul li::before { content: '—'; position: absolute; left: 0; color: var(--accent); font-size: 11px; top: 2px; }
+    .exp-body-inner strong { color: var(--text); font-weight: 600; }
 
     @media (max-width:440px) {
       .exp-num { display:none; }
       .exp-date { display:none; }
       .exp-header { padding:16px; }
       .exp-body-inner { padding:14px 16px 18px; }
+    }
+
+    /* ── PROJECTS ── */
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; }
+    @media (max-width: 640px) { .projects-grid { grid-template-columns: 1fr; } }
+
+    .proj-card {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 28px 24px; position: relative; overflow: hidden;
+      transition: border-color .3s, transform .3s;
+      display: flex; flex-direction: column;
+    }
+    .proj-card:hover { border-color: rgba(200,255,0,.3); transform: translateY(-4px); }
+    .proj-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent3));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .4s cubic-bezier(.4,0,.2,1);
+    }
+    .proj-card:hover::before { transform: scaleX(1); }
+    .proj-year { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: .18em; margin-bottom: 12px; text-transform: uppercase; }
+    .proj-title { font-size: clamp(15px,2.5vw,18px); font-weight: 700; line-height: 1.25; margin-bottom: 12px; }
+    .proj-desc { font-size: 12.5px; color: var(--muted); line-height: 1.8; margin-bottom: 20px; flex: 1; }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: auto; }
+    .proj-tag {
+      font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .08em;
+      padding: 3px 9px; border-radius: 100px; text-transform: uppercase;
+      background: rgba(200,255,0,.07); color: var(--accent); border: 1px solid rgba(200,255,0,.18);
+    }
+
+    /* ── EDUCATION ── */
+    .edu-card {
+      background:var(--card); border:1px solid var(--border); border-radius:4px;
+      padding:32px 28px; display:flex; flex-wrap:wrap;
+      align-items:flex-start; justify-content:space-between; gap:18px;
+      position:relative; overflow:hidden; transition:border-color .3s, transform .3s;
+    }
+    .edu-card:hover { border-color:rgba(0,212,255,.4); transform:translateY(-3px); }
+    .edu-card::before {
+      content:''; position:absolute; top:0; left:0;
+      width:4px; height:100%; background:linear-gradient(180deg, var(--accent3), transparent);
+    }
+    .edu-uni { font-size:clamp(17px,3vw,22px); font-weight:700; }
+    .edu-degree { font-family:'Space Mono',monospace; font-size:11px; color:var(--accent3); letter-spacing:.08em; margin-top:8px; }
+    .edu-wam { font-family:'Space Mono',monospace; font-size:11px; color:var(--accent); letter-spacing:.08em; margin-top:6px; }
+    .edu-desc { font-size:12.5px; color:var(--muted); margin-top:12px; line-height:1.8; }
+    .edu-years {
+      font-family:'Space Mono',monospace; font-size:12px; color:var(--muted);
+      white-space:nowrap; background:rgba(255,255,255,.04);
+      padding:8px 14px; border-radius:4px; border:1px solid var(--border); align-self:flex-start;
     }
 
     /* ── CONTACT ── */
@@ -258,18 +342,31 @@
 <div id="cursor"><div id="cursor-ring"></div><div id="cursor-dot"></div></div>
 <canvas id="canvas"></canvas>
 
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">GR</a>
+    <div class="nav-links">
+      <a href="#skills" class="nav-link">Skills</a>
+      <a href="#experience" class="nav-link">Experience</a>
+      <a href="#projects" class="nav-link">Projects</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+  </div>
+</nav>
+
 <!-- HERO -->
 <section id="hero">
   <div class="wrap">
     <div class="hero-inner">
-      <div class="hero-tag"><span class="dot"></span>Open to opportunities</div>
+      <div class="hero-tag"><span class="dot"></span>Open to opportunities · Melbourne, AU</div>
       <h1 class="name">
         <span class="first">Ganpatth</span>
         <span class="last" data-text="Radjaradjane">Radjaradjane</span>
       </h1>
       <p class="hero-sub">
-        <span>Developer</span> — building digital things that matter.<br/>
-        Based in Melbourne, Australia.
+        <span>Software Developer</span> — Full-Stack · Mobile · Systems<br/>
+        5+ years shipping production SaaS, Android apps &amp; infrastructure.
       </p>
       <div class="hero-cta">
         <a href="#contact" class="btn btn-primary">Get in touch ↓</a>
@@ -284,27 +381,77 @@
 <section id="about" style="padding-top:0">
   <div class="wrap">
     <div class="stats-grid reveal">
-      <div class="stat-box"><div class="stat-num">7+</div><div class="stat-label">Companies</div></div>
-      <div class="stat-box"><div class="stat-num">3rd</div><div class="stat-label">Year @ Monash</div></div>
-      <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">Lines of code</div></div>
-      <div class="stat-box"><div class="stat-num">AU</div><div class="stat-label">Melbourne</div></div>
+      <div class="stat-box"><div class="stat-num">5+</div><div class="stat-label">Years shipping</div></div>
+      <div class="stat-box"><div class="stat-num">70+</div><div class="stat-label">SaaS clients</div></div>
+      <div class="stat-box"><div class="stat-num">6K+</div><div class="stat-label">Monthly shipments</div></div>
+      <div class="stat-box"><div class="stat-num">77.5</div><div class="stat-label">WAM @ Monash</div></div>
     </div>
   </div>
 </section>
 
-<!-- EDUCATION -->
-<section id="education">
+<!-- SKILLS -->
+<section id="skills">
   <div class="divider"></div>
   <div class="wrap">
-    <p class="section-label reveal">Education</p>
-    <h2 class="section-title reveal">Where I <em>studied</em></h2>
-    <div class="edu-card reveal">
-      <div>
-        <div class="edu-uni">Monash University</div>
-        <div class="edu-degree">Bachelor of Computer Science</div>
-        <div class="edu-desc">Studying software engineering, algorithms, systems design, and modern development practices at one of Australia's leading research universities.</div>
+    <p class="section-label reveal">Technical Stack</p>
+    <h2 class="section-title reveal">What I <em>work with</em></h2>
+    <div class="skills-grid reveal">
+      <div class="skill-row">
+        <span class="skill-cat">Languages</span>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">TypeScript</span>
+          <span class="skill-tag">Kotlin</span>
+          <span class="skill-tag">PHP</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">SQL</span>
+          <span class="skill-tag">Haskell</span>
+          <span class="skill-tag">Java</span>
+          <span class="skill-tag">C</span>
+          <span class="skill-tag">C++</span>
+        </div>
       </div>
-      <div class="edu-years">2023 — 2026</div>
+      <div class="skill-row">
+        <span class="skill-cat">Frameworks</span>
+        <div class="skill-tags">
+          <span class="skill-tag">LAMP Stack</span>
+          <span class="skill-tag">Android SDK</span>
+          <span class="skill-tag">Jetpack Compose</span>
+          <span class="skill-tag">MVVM</span>
+          <span class="skill-tag">Room</span>
+          <span class="skill-tag">Retrofit</span>
+          <span class="skill-tag">RxJS</span>
+          <span class="skill-tag">WebRTC</span>
+          <span class="skill-tag">Firebase</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-cat">APIs</span>
+        <div class="skill-tags">
+          <span class="skill-tag">Gemini AI</span>
+          <span class="skill-tag">Stripe</span>
+          <span class="skill-tag">FedEx</span>
+          <span class="skill-tag">Amazon Shipping</span>
+          <span class="skill-tag">Delhivery</span>
+          <span class="skill-tag">Zomato</span>
+          <span class="skill-tag">WhatsApp Business</span>
+          <span class="skill-tag">Spotify</span>
+        </div>
+      </div>
+      <div class="skill-row">
+        <span class="skill-cat">Infrastructure</span>
+        <div class="skill-tags">
+          <span class="skill-tag">Apache</span>
+          <span class="skill-tag">DNS / SSL</span>
+          <span class="skill-tag">Load Balancers</span>
+          <span class="skill-tag">Linux CLI</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">MySQL</span>
+          <span class="skill-tag">MongoDB</span>
+          <span class="skill-tag">OracleDB</span>
+          <span class="skill-tag">CI/CD</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -321,113 +468,191 @@
         <div class="exp-header" onclick="toggleExp(this)">
           <div class="exp-left">
             <span class="exp-num">01</span>
-            <div class="exp-info"><div class="exp-co">Asian House</div><div class="exp-role">Partner & Dev</div></div>
+            <div class="exp-info"><div class="exp-co">Asian House</div><div class="exp-role">Lead Developer</div></div>
           </div>
           <div class="exp-right">
-            <span class="exp-date">2023 – Present</span>
+            <span class="exp-date">Dec 2023 – Present</span>
             <span class="exp-tag tag-current">Current</span>
             <span class="exp-toggle">+</span>
           </div>
         </div>
         <div class="exp-body"><div class="exp-body-inner">
-• Oversee day to day pub operations to ensure smooth functioning and consistent customer satisfaction <br>
-• Plan and organize monthly DJ lineups and live events to attract customers and maximize sales <br>
-• Manage finances, budgets, and set performance targets to maintain profitability <br>
-• Lead and supervise staff, ensuring strong teamwork, service quality, and operational efficiency <br>
-• Drive marketing and promotional campaigns to increase brand visibility and footfall <br>
-• Developed a in-house software to automate attendance, QR-based payments, complaint logging, and entry management improving overall productivity and guest experience</div></div>
+          <ul>
+            <li>Engineered a full-stack venue management SaaS platform covering e-ticketing, inventory, customer feedback, and DJ song requests via Spotify API (50–100 nightly interactions).</li>
+            <li><strong>Reduced alcohol wastage by 50%+</strong> through a custom inventory tracking app adopted across all 30 staff.</li>
+            <li><strong>Drove 40% improvement in customer retention</strong> via WhatsApp Business API automation for feedback, promotions, and order notifications.</li>
+            <li>Integrated Zomato and Swiggy Dining payment rails into a unified POS and delivery management system.</li>
+            <li>Configured access points and load balancers for 30 concurrent in-venue users.</li>
+          </ul>
+        </div></div>
       </div>
 
       <div class="exp-item">
         <div class="exp-header" onclick="toggleExp(this)">
           <div class="exp-left">
             <span class="exp-num">02</span>
-            <div class="exp-info"><div class="exp-co">Vira Jewels</div><div class="exp-role">Web Developer</div></div>
+            <div class="exp-info"><div class="exp-co">Gdrmlogistics</div><div class="exp-role">Founder & Lead Developer</div></div>
           </div>
           <div class="exp-right">
-            <span class="exp-date">2022 – 2023</span>
+            <span class="exp-date">Dec 2020 – Dec 2025</span>
             <span class="exp-tag tag-past">Past</span>
             <span class="exp-toggle">+</span>
           </div>
         </div>
-        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+        <div class="exp-body"><div class="exp-body-inner">
+          <ul>
+            <li>Founded and solo-built a multi-courier logistics SaaS platform from scratch, scaling to <strong>70–80 active business clients</strong> processing <strong>6,000+ monthly shipments</strong>.</li>
+            <li>Integrated <strong>6+ courier REST APIs</strong> (Delhivery, FedEx, Amazon Shipping, Smartr, Ecom Express, XpressBees) into a unified dispatch and tracking dashboard, eliminating manual handoffs.</li>
+            <li>Delivered full-stack development on LAMP stack architecture through CI/CD deployment maintaining <strong>zero downtime</strong>.</li>
+            <li>Led all client onboarding and iterative product improvements across 70+ feedback cycles.</li>
+          </ul>
+        </div></div>
       </div>
 
       <div class="exp-item">
         <div class="exp-header" onclick="toggleExp(this)">
           <div class="exp-left">
             <span class="exp-num">03</span>
-            <div class="exp-info"><div class="exp-co">Interjet India Pvt Ltd</div><div class="exp-role">Intern</div></div>
+            <div class="exp-info"><div class="exp-co">Interjet India Pvt Ltd</div><div class="exp-role">IT Intern</div></div>
           </div>
           <div class="exp-right">
-            <span class="exp-date">2022 – 2022</span>
+            <span class="exp-date">Nov 2023 – Jan 2024</span>
             <span class="exp-tag tag-past">Past</span>
             <span class="exp-toggle">+</span>
           </div>
         </div>
-        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+        <div class="exp-body"><div class="exp-body-inner">
+          <ul>
+            <li>Deployed and configured client websites across managed hosting environments including DNS, SSL, and Apache server setup.</li>
+            <li>Monitored broadband network infrastructure for SLA compliance; provided Tier 1–2 support including router configuration, on-site fault resolution, and escalation management.</li>
+          </ul>
+        </div></div>
       </div>
 
       <div class="exp-item">
         <div class="exp-header" onclick="toggleExp(this)">
           <div class="exp-left">
             <span class="exp-num">04</span>
-            <div class="exp-info"><div class="exp-co">SD Diabetes & HealthCare</div><div class="exp-role">Network Administrator</div></div>
+            <div class="exp-info"><div class="exp-co">Vira Jewels</div><div class="exp-role">Web Developer</div></div>
           </div>
           <div class="exp-right">
-            <span class="exp-date">2020 - 2023</span>
+            <span class="exp-date">Dec 2022 – Jun 2023</span>
             <span class="exp-tag tag-past">Past</span>
             <span class="exp-toggle">+</span>
           </div>
         </div>
-        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+        <div class="exp-body"><div class="exp-body-inner">
+          <ul>
+            <li>Built and launched an e-commerce platform processing <strong>15,000+ monthly orders</strong> with Razorpay &amp; PhonePe payment gateways and Delhivery API for real-time shipment tracking.</li>
+            <li>Integrated WhatsApp automation for cart recovery and order notifications.</li>
+            <li>Built backend inventory management system synced to order fulfilment, reducing manual stock reconciliation.</li>
+          </ul>
+        </div></div>
       </div>
 
       <div class="exp-item">
         <div class="exp-header" onclick="toggleExp(this)">
           <div class="exp-left">
             <span class="exp-num">05</span>
-            <div class="exp-info"><div class="exp-co">Grab The Case</div><div class="exp-role">Web Developer</div></div>
+            <div class="exp-info"><div class="exp-co">SD Diabetes & Healthcare</div><div class="exp-role">Network Admin & Developer</div></div>
           </div>
           <div class="exp-right">
-            <span class="exp-date">2021 – 2022</span>
+            <span class="exp-date">Dec 2020 – Jun 2023</span>
             <span class="exp-tag tag-past">Past</span>
             <span class="exp-toggle">+</span>
           </div>
         </div>
-        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
-      </div>
-<!--
-      <div class="exp-item">
-        <div class="exp-header" onclick="toggleExp(this)">
-          <div class="exp-left">
-            <span class="exp-num">06</span>
-            <div class="exp-info"><div class="exp-co">Company Six</div><div class="exp-role">Role Title</div></div>
-          </div>
-          <div class="exp-right">
-            <span class="exp-date">20XX – 20XX</span>
-            <span class="exp-tag tag-past">Past</span>
-            <span class="exp-toggle">+</span>
-          </div>
-        </div>
-        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
+        <div class="exp-body"><div class="exp-body-inner">
+          <ul>
+            <li>Built a <strong>WebRTC teleconsultation platform</strong> during COVID enabling 20 daily remote patient consultations with integrated payment gateway, load balancer, and hospital management software.</li>
+            <li>Installed and configured CCTV security systems; deployed and maintained clinic IT infrastructure.</li>
+          </ul>
+        </div></div>
       </div>
 
-      <div class="exp-item">
-        <div class="exp-header" onclick="toggleExp(this)">
-          <div class="exp-left">
-            <span class="exp-num">07</span>
-            <div class="exp-info"><div class="exp-co">Company Seven</div><div class="exp-role">Role Title</div></div>
-          </div>
-          <div class="exp-right">
-            <span class="exp-date">20XX – 20XX</span>
-            <span class="exp-tag tag-past">Past</span>
-            <span class="exp-toggle">+</span>
-          </div>
-        </div>
-        <div class="exp-body"><div class="exp-body-inner">Add your description here.</div></div>
-      </div> -->
+    </div>
+  </div>
+</section>
 
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="divider"></div>
+  <div class="wrap">
+    <p class="section-label reveal">Projects</p>
+    <h2 class="section-title reveal">Things I've <em>built</em></h2>
+    <div class="projects-grid">
+      
+      <div class="proj-card reveal">
+        <div class="proj-year">2024</div>
+        <div class="proj-title">Markdown → HTML Transpiler</div>
+        <div class="proj-desc">Full Haskell transpiler converting Markdown to HTML via a custom ADT/AST, implementing parser combinators from scratch using Functor, Applicative, and Monad typeclasses. Ships a live web editor with real-time rendering over WebSocket.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Haskell</span>
+          <span class="proj-tag">TypeScript</span>
+          <span class="proj-tag">WebSockets</span>
+          <span class="proj-tag">Parser Combinators</span>
+        </div><br>
+        <a href="https://github.com/ganzuit/Markdown-Transpiler" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
+
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-year">2024</div>
+        <div class="proj-title">Guitar Hero Clone — FRP</div>
+        <div class="proj-desc">Full Guitar Hero-style game in TypeScript using RxJS Observable streams for all game state, user input, note timing, and scoring — strictly adhering to FRP purity principles with MIDI audio playback and zero mutable variables.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">TypeScript</span>
+          <span class="proj-tag">RxJS</span>
+          <span class="proj-tag">MIDI</span>
+          <span class="proj-tag">SVG</span>
+        </div><br>
+        <a href="https://github.com/ganzuit/Guitar-Hero-Game" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-year">2025</div>
+        <div class="proj-title">NutriTrack Pro — AI Nutrition App</div>
+        <div class="proj-desc">Multi-user Android health platform with MVVM architecture and Room database. Integrated Gemini AI to generate personalised dietary insights based on per-user nutrition scores, with full auth flow and admin analytics view.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Kotlin</span>
+          <span class="proj-tag">Android</span>
+          <span class="proj-tag">Gemini AI</span>
+          <span class="proj-tag">Room</span>
+          <span class="proj-tag">Retrofit</span>
+        </div><br>
+        <a href="https://github.com/ganzuit/NT-App" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-year">2025</div>
+        <div class="proj-title">Winter Survival — OOP Simulation</div>
+        <div class="proj-desc">Turn-based survival game modelling health, warmth, and hydration systems using OOP principles — encapsulation, inheritance, and polymorphism with modular entity classes for player, wildlife, and environment interactions.</div>
+        <div class="proj-tags">
+          <span class="proj-tag">Python</span>
+          <span class="proj-tag">OOP</span>
+          <span class="proj-tag">Design Patterns</span>
+        </div><br>
+        <a href="https://github.com/ganzuit/WinterSurvival" target="_blank" rel="noopener noreferrer" class="btn btn-primary">GitHub</a>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="divider"></div>
+  <div class="wrap">
+    <p class="section-label reveal">Education</p>
+    <h2 class="section-title reveal">Where I <em>studied</em></h2>
+    <div class="edu-card reveal">
+      <div>
+        <div class="edu-uni">Monash University</div>
+        <div class="edu-degree">Bachelor of Computer Science — Advanced</div>
+        <div class="edu-desc">Algorithms &amp; Data Structures · Advanced DSA · Operating Systems · Computer Networks · Databases · OOP Design · Programming Paradigms · Mobile App Development · Parallel Computing</div>
+      </div>
+      <div class="edu-years">2023 — Dec 2026</div>
     </div>
   </div>
 </section>
@@ -439,15 +664,15 @@
     <div class="contact-wrap reveal">
       <div class="contact-title">Let's<br/><span class="highlight">work together.</span></div>
       <div class="contact-links">
-        <a href="mailto:itsme@ganzu.me" class="contact-link">
+        <a href="mailto:ganpatthr.radjane@gmail.com" class="contact-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          itsme@ganzu.me
+          ganpatthr.radjane@gmail.com
         </a>
-        <a href="https://linkedin.com/in/ganpatth" target="_blank" rel="noopener" class="contact-link">
+        <a href="https://linkedin.com/in/Ganpatth" target="_blank" rel="noopener" class="contact-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
           LinkedIn
         </a>
-        <a href="#" class="contact-link">
+        <a href="https://github.com/ganzuit" target="_blank" rel="noopener" class="contact-link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
           GitHub
         </a>
@@ -458,7 +683,7 @@
 
 <footer>
   <div class="wrap">
-    <span class="footer-text">© 2025 <span>Ganpatth Radjaradjane</span></span>
+    <span class="footer-text">© 2026 <span>Ganpatth Radjaradjane</span></span>
     <span class="footer-text">Melbourne, <span>Australia</span></span>
   </div>
 </footer>
@@ -513,7 +738,7 @@
   const obs = new IntersectionObserver(entries => {
     entries.forEach((e,i) => {
       if(e.isIntersecting){
-        setTimeout(()=>e.target.classList.add('visible'),i*50);
+        setTimeout(()=>e.target.classList.add('visible'),i*60);
         obs.unobserve(e.target);
       }
     });
